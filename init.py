@@ -15,7 +15,7 @@ functions_by_direction = {0: lambda cord: (cord[0] - 1, cord[1]), 1: lambda cord
 sector_rows, sector_cols = 6, 6
 rows, cols = 4, 4
 ROWS, COLS = sector_rows * rows, cols * sector_cols
-M = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
+map = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
 vertices = {}
 cars = []
 a_friction = 0
