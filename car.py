@@ -24,8 +24,12 @@ class Car:
         self.v = min(v_max, self.v)
         self.s += self.v * dt
         if self.s >= 1:
-            if self.handler is not None and self.vertex == self.handler.vertex:
-                self.handler.report_done()
+
+            if self.handler is not None:
+                if self.vertex[0] == self.handler.vertex:
+                    self.handler.car_crossed()
+                    self.cross_allowed = False
+                    self.handler = None
             self.vertex = choice(vertices[self.vertex])
-            print(self.vertex)
             self.s -= 1
+

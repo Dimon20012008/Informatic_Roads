@@ -15,11 +15,12 @@ class Drawer:
                 rect = img.get_rect()
                 rect.center = tile_width // 2 + x * tile_width, tile_height // 2 + y * tile_height
                 screen.blit(img, rect)
-                for car in cars:
-                    car_y, car_x = car.vertex[0]
-                    tile_type = car.vertex[1]
-                    car_img_x, car_img_y = tile_width * (function_by_tile[tile_type](car.s)[0] + car_x), tile_height * (
-                                function_by_tile[tile_type](car.s)[1] + car_y)
-                    pygame.draw.circle(screen, "red", (car_img_x, car_img_y), 5)
-                pygame.display.update()
+        for car in cars:
+            car_y, car_x = car.vertex[0]
+            tile_type = car.vertex[1]
+            car_img_x, car_img_y = tile_width * (function_by_tile[tile_type](car.s)[0] + car_x), tile_height * (
+                    function_by_tile[tile_type](car.s)[1] + car_y)
+            pygame.draw.circle(screen, "orange", (car_img_x, car_img_y), 5)
+
+        pygame.display.update()
 
