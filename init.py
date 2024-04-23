@@ -17,4 +17,12 @@ ROWS, COLS = sector_rows * rows, cols * sector_cols
 M = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
 vertices = {}
 
+a_friction = 0
+a_gas = 0.5
+a_brake = 1
+v_max = 2
+dt = 1 / 60
 
+
+simulator = None
+drawer = None
