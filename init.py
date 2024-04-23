@@ -1,5 +1,6 @@
 import numpy as np
 
+
 tiles = {(): " ", (0, 1): "┗", (1, 2): "┏", (2, 3): "┓", (0, 3): "┛", (0, 2): "┃", (1, 3): "━", (0, 1, 2): "┣",
          (1, 2, 3): "┳", (0, 2, 3): "┫", (0, 1, 3): "┻", (0, 1, 2, 3): "╋"}
 inv_tiles = {' ': (), '┗': (0, 1), '┏': (1, 2), '┓': (2, 3), '┛': (0, 3), '┃': (0, 2), '━': (1, 3), '┣': (0, 1, 2),
@@ -16,13 +17,13 @@ rows, cols = 4, 4
 ROWS, COLS = sector_rows * rows, cols * sector_cols
 M = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
 vertices = {}
-
+cars = []
 a_friction = 0
 a_gas = 0.5
 a_brake = 1
 v_max = 2
 dt = 1 / 60
-
+number_of_bots = 10
 
 simulator = None
 drawer = None

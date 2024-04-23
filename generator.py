@@ -1,6 +1,6 @@
-from random import randint
+from random import *
 from init import *
-
+from car import Car
 
 def get_value(y, x):
     if 0 <= y < ROWS and 0 <= x < COLS:
@@ -103,7 +103,15 @@ def generate_vertices():
                         for neighbour in next_tile:
                             if neighbour == (direction + 2) % 4:
                                 continue
-                            neighbours.append((functions_by_direction[direction]((y, x)), ((direction + 2) % 4, neighbour)))
+                            neighbours.append(
+                                (functions_by_direction[direction]((y, x)), ((direction + 2) % 4, neighbour)))
                         for start in tile:
                             if start != direction:
                                 vertices[((y, x), (start, direction))] = neighbours
+
+
+def generate_cars():
+    shuffle(vertices)
+    starts = vertices[:number_of_bots]
+    for start in starts:
+        cars.append(Car(start))
