@@ -35,8 +35,8 @@ class Simulator:
         acc = 1
         vertices_to_check = []
         current = car.vertex
-        brake_dist = car.v ** 2 / (2 * a_brake)
-        brake_dist_max = v_max ** 2 / (2 * a_brake)
+        brake_dist = car.v ** 2 / (2 * a_brake) + 0.3
+        brake_dist_max = v_max ** 2 / (2 * a_brake) + 0.3
         cross = None
 
         for ver_i in range(ceil(brake_dist_max)):
@@ -46,8 +46,8 @@ class Simulator:
                 break
             current = vertices[current][0]
         for other_car in cars:
-            if other_car.vertice in vertices_to_check:
-                i = vertices_to_check.index(other_car.vertice)
+            if other_car.vertex in vertices_to_check:
+                i = vertices_to_check.index(other_car.vertex)
                 dist_between_cars = i - car.s + other_car.s
                 if 0 < dist_between_cars < brake_dist:
                     return -1
@@ -64,8 +64,9 @@ class Simulator:
 
     def update(self):
         for car in cars:
-            car.set_acc(self.get_acc_by_obstacles(car))
-            if car.v == 0 and len(vertices[car.vertice]) > 1 and car.handler is None:
-                self.handlers[vertices[car.vertex][0][0]].push(car)
-                car.handler = self.handlers[vertices[car.vertex][0][0]]
-
+            #car.set_acc(self.get_acc_by_obstacles(car))
+            car.set_acc(1)
+            #if car.v == 0 and len(vertices[car.vertex]) > 1 and car.handler is None:
+            #    self.handlers[vertices[car.vertex][0][0]].push(car)
+            #    car.handler = self.handlers[vertices[car.vertex][0][0]]
+            car.update()

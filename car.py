@@ -1,5 +1,5 @@
 from init import *
-
+from random import *
 
 class Car:
     def __init__(self, vertex):
@@ -26,5 +26,6 @@ class Car:
         if self.s >= 1:
             if self.handler is not None and self.vertex == self.handler.vertex:
                 self.handler.report_done()
-            vertex = simulator.get_next_vertex(self.vertex)
+            self.vertex = choice(vertices[self.vertex])
+            print(self.vertex)
             self.s -= 1

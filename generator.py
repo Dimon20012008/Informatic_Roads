@@ -2,30 +2,31 @@ from random import *
 from init import *
 from car import Car
 
+
 def get_value(y, x):
     if 0 <= y < ROWS and 0 <= x < COLS:
-        return M[y][x]
+        return map[y, x]
     return " "
 
 
 def generate_map():
     def rect(point1, point2):
-        global M
-        M[min(point1[0], point2[0]):min(point1[0], point2[0]) + 1,
+
+        map[min(point1[0], point2[0]):min(point1[0], point2[0]) + 1,
         min(point1[1], point2[1]):max(point1[1], point2[1])] = "▢"
-        M[max(point1[0], point2[0]):max(point1[0], point2[0]) + 1,
+        map[max(point1[0], point2[0]):max(point1[0], point2[0]) + 1,
         min(point1[1], point2[1]):max(point1[1], point2[1])] = "▢"
-        M[min(point1[0], point2[0]):max(point1[0], point2[0]),
+        map[min(point1[0], point2[0]):max(point1[0], point2[0]),
         min(point1[1], point2[1]):min(point1[1], point2[1]) + 1] = "▢"
-        M[min(point1[0], point2[0]):max(point1[0], point2[0]) + 1,
+        map[min(point1[0], point2[0]):max(point1[0], point2[0]) + 1,
         max(point1[1], point2[1]):max(point1[1], point2[1]) + 1] = "▢"
 
     def fill_rect(points):
         point1, point2 = points
-        M[min(point1[0], point2[0]) + 1:max(point1[0], point2[0]),
+        map[min(point1[0], point2[0]) + 1:max(point1[0], point2[0]),
         min(point1[1], point2[1]) + 1:max(point1[1], point2[1])] = "▦"
 
-    M[:, :] = "▦"
+    map[:, :] = "▦"
     # (y,x)
     sectors = [((0, 0), (2, 2)), ((0, 3), (2, 1)), ((3, 0), (1, 2)), ((1, 1), (3, 3))]
     points = []
@@ -65,35 +66,32 @@ def generate_map():
 
     for y in range(rows * sector_rows):
         for x in range(cols * sector_cols):
-            M[y][x] = tiles[get_road_neighbours(y, x)]
+            map[y][x] = tiles[get_road_neighbours(y, x)]
             if get_value(y - 1, x) == tiles[(1, 2, 3)] and get_value(y, x) == tiles[(0, 1, 3)]:
-                M[y][x] = tiles[(1, 3)]
-                M[y - 1][x] = tiles[(1, 3)]
+                map[y][x] = tiles[(1, 3)]
+                map[y - 1][x] = tiles[(1, 3)]
             elif get_value(y, x - 1) == tiles[(0, 1, 2)] and get_value(y, x) == tiles[(0, 2, 3)]:
-                M[y][x] = tiles[(0, 2)]
-                M[y][x - 1] = tiles[(0, 2)]
+                map[y][x] = tiles[(0, 2)]
+                map[y][x - 1] = tiles[(0, 2)]
             elif get_value(y, x) == tiles[(0, 1, 3)] and get_value(y - 1, x) == tiles[(0, 1, 2, 3)] and get_value(y - 2,
                                                                                                                   x) == \
                     tiles[(1, 2, 3)]:
-                M[y - 1][x] = tiles[(1, 3)]
-                M[y - 2][x] = tiles[(1, 3)]
-                M[y][x] = tiles[(1, 3)]
+                map[y - 1][x] = tiles[(1, 3)]
+                map[y - 2][x] = tiles[(1, 3)]
+                map[y][x] = tiles[(1, 3)]
             elif get_value(y, x) == tiles[(0, 2, 3)] and get_value(y, x - 1) == tiles[(0, 1, 2, 3)] and get_value(y,
                                                                                                                   x - 2) == \
                     tiles[(0, 1, 2)]:
-                M[y][x] = tiles[(0, 2)]
-                M[y][x - 1] = tiles[(0, 2)]
-                M[y][x - 2] = tiles[(0, 2)]
-
-    for row in M:
-        print(*row, sep="")
+                map[y][x] = tiles[(0, 2)]
+                map[y][x - 1] = tiles[(0, 2)]
+                map[y][x - 2] = tiles[(0, 2)]
 
 
 # for two_side: 0 clock wise, 1 counter clock wise. For others:
 def generate_vertices():
     for y in range(ROWS):
         for x in range(COLS):
-            tile = inv_tiles[M[y][x]]
+            tile = inv_tiles[map[y][x]]
             for direction in tile:
                 for i in range(4):
                     if direction == i:
@@ -111,7 +109,9 @@ def generate_vertices():
 
 
 def generate_cars():
-    shuffle(vertices)
-    starts = vertices[:number_of_bots]
+    all_starts = list(vertices.keys())
+    shuffle(all_starts)
+    starts = all_starts[:number_of_bots]
     for start in starts:
         cars.append(Car(start))
+
