@@ -112,5 +112,6 @@ def generate_cars():
     all_starts = list(vertices.keys())
     shuffle(all_starts)
     starts = all_starts[:number_of_bots]
+
     for start in starts:
         cars.append(Car(start))

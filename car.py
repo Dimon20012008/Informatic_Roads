@@ -7,8 +7,7 @@ class Car:
         self.s = 0.5
         self.v = 0
         self.acc = a_friction
-        self.cross_allowed = False
-        self.handler = None
+        self.handlers = {}
 
     def set_acc(self, mode: int):
         if mode == 0:
@@ -25,11 +24,13 @@ class Car:
         self.s += self.v * dt
         if self.s >= 1:
 
-            if self.handler is not None:
-                if self.vertex[0] == self.handler.vertex:
-                    self.handler.car_crossed()
-                    self.cross_allowed = False
-                    self.handler = None
+            if self.handlers:
+                handlers_to_remove = []
+                for handler in self.handlers.keys():
+                    if self.vertex[0] == handler.vertex:
+                        handler.car_crossed()
+                        handlers_to_remove.append(handler)
+                for handler in handlers_to_remove:
+                    self.handlers.pop(handler)
             self.vertex = choice(vertices[self.vertex])
             self.s -= 1
-

@@ -13,16 +13,25 @@ class Simulator:
 
         def car_crossed(self):
             self.current = None
+            self.queue.pop()
             self.update()
 
         def update(self):
             if self.current is None and self.queue:
-                self.current = self.queue.pop()
-                self.current.cross_allowed = True
-                self.current.handler = self
+                self.current = self.queue[-1]
+                self.current.handlers[self] = True
+            stuck = True
+            for car in self.queue:
+                if not (car.v == 0 and car.acc <= 0):
+                    stuck = False
+                    break
+            if stuck and self.queue:
+                for handler in self.queue[-1].handlers.keys():
+                    self.queue[-1].handlers[handler] = True
 
         def push(self, car: Car):
             self.queue.insert(0, car)
+            car.handlers[self] = False
 
     def __init__(self):
         self.handlers = {}
@@ -35,17 +44,20 @@ class Simulator:
         acc = 1
         vertices_to_check = []
         current = car.vertex
-        delta_car = 0.25
-        brake_dist = abs(car.v ** 2 / (2 * a_brake))+delta_car
-        brake_dist_max = abs(v_max ** 2 / (2 * a_brake))+delta_car
+        delta_car = 0.35
+        brake_dist = abs(car.v ** 2 / (2 * a_brake)) + delta_car
+        brake_dist_max = abs(v_max ** 2 / (2 * a_brake)) + delta_car
 
-        cross = None
-        for ver_i in range(ceil(brake_dist_max)+1):
-            vertices_to_check.append(current)
+        crosses = []
+        for ver_i in range(ceil(brake_dist_max) + 1):
+            if current not in vertices_to_check:
+                vertices_to_check.append(current)
             if len(vertices[current]) > 1:
-                cross = current
-                break
+                crosses.append(vertices[current])
+                if vertices[current] not in vertices_to_check:
+                    vertices_to_check.append(vertices[current])
             current = vertices[current][0]
+
         for other_car in cars:
             if other_car == car:
                 continue
@@ -58,20 +70,23 @@ class Simulator:
                 elif 0 < dist_between_cars < brake_dist_max:
                     acc = 0
 
-        if cross is not None and not car.cross_allowed:
-            dist_to_cross = vertices_to_check.index(cross) - car.s + 0.5
-            if dist_to_cross < brake_dist - delta_car:
-                return -1
-            elif dist_to_cross < brake_dist_max - delta_car:
-                return 0
+        for cross in crosses:
+
+            if not car.handlers.get(self.handlers[cross[0][0]], False):
+                dist_to_cross = vertices_to_check.index(cross) - car.s + 0.5
+                if dist_to_cross < brake_dist + 0.5:
+                    return -1
+                elif dist_to_cross < brake_dist_max + 0.5:
+                    acc = 0
         return acc
 
     def update(self):
         for car in cars:
             car.set_acc(self.get_acc_by_obstacles(car))
-            if car.v == 0 and len(vertices[car.vertex]) > 1 and car.handler is None:
-                self.handlers[vertices[car.vertex][0][0]].push(car)
-                car.handler = self.handlers[vertices[car.vertex][0][0]]
+            if car.v == 0 and len(vertices[car.vertex]) > 1 and not car.handlers.get(
+                    self.handlers[vertices[car.vertex][0][0]], False):
+                if car not in self.handlers[vertices[car.vertex][0][0]].queue:
+                    self.handlers[vertices[car.vertex][0][0]].push(car)
             car.update()
         for handler_key in self.handlers.keys():
             self.handlers[handler_key].update()
