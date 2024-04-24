@@ -31,12 +31,11 @@ map = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
 vertices = {}
 cars = []
 a_friction = 0
-a_gas = 100
-a_brake = -200
-v_max = 10
+a_gas = 30
+a_brake = -60
+v_max = 3
 dt = 1 / 120
 number_of_bots = 30
-
 simulator = None
 drawer = None
 

@@ -21,13 +21,22 @@ class Simulator:
                 self.current = self.queue[-1]
                 self.current.handlers[self] = True
             stuck = True
+#
             for car in self.queue:
-                if not (car.v == 0 and car.acc <= 0):
+                if not (car.v == 0):
                     stuck = False
                     break
+#
             if stuck and self.queue:
                 for handler in self.queue[-1].handlers.keys():
                     self.queue[-1].handlers[handler] = True
+                if not self.queue[-1].invincible:
+                    self.queue[-1].invincible = True
+                    self.queue[-1].set_acc(1)
+                    self.queue[-1].v = v_max
+                    self.queue[-1].update()
+
+
 
         def push(self, car: Car):
             self.queue.insert(0, car)
@@ -44,7 +53,7 @@ class Simulator:
         acc = 1
         vertices_to_check = []
         current = car.vertex
-        delta_car = 0.35
+        delta_car = 0.5
         brake_dist = abs(car.v ** 2 / (2 * a_brake)) + delta_car
         brake_dist_max = abs(v_max ** 2 / (2 * a_brake)) + delta_car
 

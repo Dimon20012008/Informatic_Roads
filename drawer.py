@@ -20,7 +20,12 @@ class Drawer:
             tile_type = car.vertex[1]
             car_img_x, car_img_y = tile_width * (function_by_tile[tile_type](car.s)[0] + car_x), tile_height * (
                     function_by_tile[tile_type](car.s)[1] + car_y)
-            pygame.draw.circle(screen, "orange", (car_img_x, car_img_y), 5)
+            img = pygame.image.load('images/car.png')
+            img.convert()
+            img = pygame.transform.scale(img, (tile_width//8, tile_height//8))
+            rect = img.get_rect()
+            rect.center = car_img_x, car_img_y
+            screen.blit(img, rect)
 
         pygame.display.update()
 

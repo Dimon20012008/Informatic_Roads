@@ -8,6 +8,7 @@ class Car:
         self.v = 0
         self.acc = a_friction
         self.handlers = {}
+        self.invincible = False
 
     def set_acc(self, mode: int):
         if mode == 0:
@@ -30,6 +31,7 @@ class Car:
                     if self.vertex[0] == handler.vertex:
                         handler.car_crossed()
                         handlers_to_remove.append(handler)
+                        self.invincible = False
                 for handler in handlers_to_remove:
                     self.handlers.pop(handler)
             self.vertex = choice(vertices[self.vertex])
