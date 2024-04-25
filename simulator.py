@@ -54,8 +54,8 @@ class Simulator:
         vertices_to_check = []
         current = car.vertex
         delta_car = 0.5
-        brake_dist = abs(car.v ** 2 / (2 * a_brake)) + delta_car
-        brake_dist_max = abs(v_max ** 2 / (2 * a_brake)) + delta_car
+        brake_dist = abs(car.v ** 2 / (2 * car.a_brake)) + delta_car
+        brake_dist_max = abs(car.v_max ** 2 / (2 * car.a_brake)) + delta_car
 
         crosses = []
         for ver_i in range(ceil(brake_dist_max) + 1):
@@ -82,16 +82,17 @@ class Simulator:
         for cross in crosses:
 
             if not car.handlers.get(self.handlers[cross[0][0]], False):
-                dist_to_cross = vertices_to_check.index(cross) - car.s + 0.5
-                if dist_to_cross < brake_dist + 0.5:
+                dist_to_cross = vertices_to_check.index(cross) - car.s + delta_car
+                if dist_to_cross < brake_dist + delta_car:
                     return -1
-                elif dist_to_cross < brake_dist_max + 0.5:
+                elif dist_to_cross < brake_dist_max + delta_car:
                     acc = 0
         return acc
 
     def update(self):
         for car in cars:
             car.set_acc(self.get_acc_by_obstacles(car))
+
             if car.v == 0 and len(vertices[car.vertex]) > 1 and not car.handlers.get(
                     self.handlers[vertices[car.vertex][0][0]], False):
                 if car not in self.handlers[vertices[car.vertex][0][0]].queue:

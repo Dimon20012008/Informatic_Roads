@@ -15,6 +15,11 @@ class Drawer:
         car_img = pygame.transform.scale(car_img, (tile_width // 8, tile_height // 8))
         self.car_img = car_img
 
+        car_slower_img = pygame.image.load('images/car_slower.png')
+        car_slower_img.convert()
+        car_slower_img = pygame.transform.scale(car_slower_img, (tile_width // 8, tile_height // 8))
+        self.car_slower_img = car_slower_img
+
     def draw(self):
         for y in range(ROWS):
             for x in range(COLS):
@@ -27,7 +32,11 @@ class Drawer:
             tile_type = car.vertex[1]
             car_img_x, car_img_y = tile_width * (function_by_tile[tile_type](car.s)[0] + car_x), tile_height * (
                     function_by_tile[tile_type](car.s)[1] + car_y)
-            img = self.car_img
+            img = None
+            if car.type == "normal":
+                img = self.car_img
+            else:
+                img = self.car_slower_img
             rect = img.get_rect()
             rect.center = car_img_x, car_img_y
             screen.blit(img, rect)

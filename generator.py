@@ -111,7 +111,13 @@ def generate_vertices():
 def generate_cars():
     all_starts = list(vertices.keys())
     shuffle(all_starts)
-    starts = all_starts[:number_of_bots]
+
+    starts_slower = all_starts[:number_of_slowers]
+    starts = all_starts[number_of_slowers:number_of_bots]
+
+    for start_slower in starts_slower:
+        cars.append(Car(start_slower, type="slower"))
 
     for start in starts:
         cars.append(Car(start))
+
