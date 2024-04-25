@@ -31,18 +31,6 @@ map = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
 vertices = {}
 cars = []
 
-# car properties backup
-'''a_friction = -1
-a_gas = 20
-a_brake = -40
-v_max = 2
-
-a_gas_slower = 20
-a_brake_slower = -40
-v_max_slower = 1
-
-number_of_bots = 30
-number_of_slowers = 1'''
 
 # car properties
 a_friction = -1

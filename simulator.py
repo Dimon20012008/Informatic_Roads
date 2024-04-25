@@ -30,16 +30,18 @@ class Simulator:
             stuck = True
 
             for car in self.queue:
-                if not (car.v == 0):
+                if not (car.v == 0 and car.acc <= 0):
                     stuck = False
                     break
+                if init.simulator is not None:
+                    if init.simulator.get_acc_by_obstacles(car) >= 0:
+                        stuck = False
+                        break
 
             if stuck and self.queue:
                 first_car = self.get_first()
                 for handler in first_car.handlers.keys():
                     first_car.handlers[handler] = True
-                if not first_car.invincible:
-                    first_car.invincible = True
                 first_car.set_acc(1)
                 first_car.v = v_max
                 first_car.update()
@@ -61,7 +63,7 @@ class Simulator:
         current = car.vertex
         delta_car = 0.5
         if car.type == "slower":
-            delta_car = 1
+            delta_car = 0.75
         brake_dist = abs(car.v ** 2 / (2 * car.a_brake)) + delta_car
         brake_dist_max = abs(car.v_max ** 2 / (2 * car.a_brake)) + delta_car
 
@@ -88,7 +90,6 @@ class Simulator:
                     acc = 0
 
         for cross in crosses:
-
             if not car.handlers.get(self.handlers[cross[0][0]], False):
                 dist_to_cross = vertices_to_check.index(cross) - car.s + delta_car
                 if dist_to_cross < brake_dist + delta_car:

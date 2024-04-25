@@ -35,17 +35,18 @@ class Car:
         self.v = min(self.v_max, self.v)
         self.s += self.v * dt
 
-
-
         if self.s >= 1:
             if self.handlers:
-                handlers_to_remove = []
-                for handler in self.handlers.keys():
-                    if self.vertex[0] == handler.vertex:
+                handlers_to_work_with = []
+                try:
+                    for handler in self.handlers.keys():
+                        if self.vertex[0] == handler.vertex or vertices[self.vertex][0][0] != handler.vertex:
+                            handlers_to_work_with.append(handler)
+                    for handler in handlers_to_work_with:
+                        self.handlers.pop(handler)
                         handler.car_crossed()
-                        handlers_to_remove.append(handler)
-                        self.invincible = False
-                for handler in handlers_to_remove:
-                    self.handlers.pop(handler)
+
+                except RuntimeError:
+                    pass
             self.vertex = choice(vertices[self.vertex])
             self.s -= 1
