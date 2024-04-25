@@ -24,7 +24,7 @@ function_by_tile = {(0, 1): lambda s: (0.375 + 0.625 * s, 0.625 * s),
                     (3, 1): lambda s: (s, 0.625),
                     (2, 3): lambda s: (0.625 - s * 0.625, 1 - 0.625 * s),
                     (3, 2): lambda s: (s * 0.375, 0.625 + 0.375 * s)}
-sector_rows, sector_cols = 4, 4
+sector_rows, sector_cols = 4, 7
 rows, cols = 4, 4
 ROWS, COLS = sector_rows * rows, cols * sector_cols
 map = np.ones((sector_rows * rows, cols * sector_cols), dtype=str)
@@ -52,7 +52,7 @@ a_brake = -40
 v_max = 2
 
 a_gas_slower = 20
-a_brake_slower = -40
+a_brake_slower = -60
 v_max_slower = 1
 
 number_of_bots = 30
@@ -66,4 +66,5 @@ tile_width, tile_height = 50, 50
 
 pygame.init()
 screen = pygame.display.set_mode((tile_width * COLS, tile_height * ROWS))
+pygame.display.set_caption("Milky Way")
 clock = pygame.time.Clock()

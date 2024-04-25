@@ -11,32 +11,38 @@ class Simulator:
             self.queue = []
             self.current = None
 
+        def get_first(self):
+            for car in self.queue[::-1]:
+                if car.type == "slower":
+                    return car
+            return self.queue[-1]
+
         def car_crossed(self):
             self.current = None
-            self.queue.pop()
+            if self.queue:
+                self.queue.pop()
             self.update()
 
         def update(self):
             if self.current is None and self.queue:
-                self.current = self.queue[-1]
+                self.current = self.get_first()
                 self.current.handlers[self] = True
             stuck = True
-#
+
             for car in self.queue:
                 if not (car.v == 0):
                     stuck = False
                     break
-#
+
             if stuck and self.queue:
-                for handler in self.queue[-1].handlers.keys():
-                    self.queue[-1].handlers[handler] = True
-                if not self.queue[-1].invincible:
-                    self.queue[-1].invincible = True
-                    self.queue[-1].set_acc(1)
-                    self.queue[-1].v = v_max
-                    self.queue[-1].update()
-
-
+                first_car = self.get_first()
+                for handler in first_car.handlers.keys():
+                    first_car.handlers[handler] = True
+                if not first_car.invincible:
+                    first_car.invincible = True
+                first_car.set_acc(1)
+                first_car.v = v_max
+                first_car.update()
 
         def push(self, car: Car):
             self.queue.insert(0, car)
@@ -54,6 +60,8 @@ class Simulator:
         vertices_to_check = []
         current = car.vertex
         delta_car = 0.5
+        if car.type == "slower":
+            delta_car = 1
         brake_dist = abs(car.v ** 2 / (2 * car.a_brake)) + delta_car
         brake_dist_max = abs(car.v_max ** 2 / (2 * car.a_brake)) + delta_car
 
