@@ -3,13 +3,20 @@ from init import *
 from car import Car
 
 
+# simple function to avoid checking each time, whether requested value is within the map
 def get_value(y, x):
     if 0 <= y < ROWS and 0 <= x < COLS:
         return map[y, x]
     return " "
 
 
+# generates a map, based on its size. Generation process is simple - there are generated 4 rectangles such that they
+# cover most of the map (which is done by spliting the whole map into 16 sectors and placing each rectangle vertice
+# in different one, so rectangles are big), these cells will be road tiles. Then each tile by looking at its
+# neighbours decides its type
 def generate_map():
+    # generate a rectangle on the map based on two points. It doesn't care about points position relative to each
+    # other (whose coordinates are bigger), if their x and y are different - that's sufficient.
     def rect(point1, point2):
 
         map[min(point1[0], point2[0]):min(point1[0], point2[0]) + 1,
@@ -21,13 +28,15 @@ def generate_map():
         map[min(point1[0], point2[0]):max(point1[0], point2[0]) + 1,
         max(point1[1], point2[1]):max(point1[1], point2[1]) + 1] = "▢"
 
+    # called once for a random rectangle, fills everything within this rectangle.
     def fill_rect(points):
         point1, point2 = points
         map[min(point1[0], point2[0]) + 1:max(point1[0], point2[0]),
         min(point1[1], point2[1]) + 1:max(point1[1], point2[1])] = "▦"
 
+    # map with road placement generation process (map now has two types of elements - there will be road, there won't
+    # be road)
     map[:, :] = "▦"
-    # (y,x)
     sectors = [((0, 0), (2, 2)), ((0, 3), (2, 1)), ((3, 0), (1, 2)), ((1, 1), (3, 3))]
     points = []
     for road in sectors:
@@ -41,12 +50,15 @@ def generate_map():
                  1] + 1) * sector_cols - 1)
         rect(point1, point2)
         points.append((point1, point2))
+    fill_rect(points[randint(0, 3)])
 
+    # checks if current tile is road, necessary since during update some tiles will turn into spaces (for printing)
     def is_road(t):
         if t == "▦" or t == " ":
             return False
         return True
 
+    # return a tuple of neighbours of current tile. the tuple is a key for dictionaries.
     def get_road_neighbours(y, x):
         l = []
         if is_road(get_value(y - 1, x)):
@@ -62,8 +74,8 @@ def generate_map():
             return tuple(l)
         return ()
 
-    fill_rect(points[randint(0, 3)])
-
+    # tile specification process. Also, if there are two or three parallel roads, they are converted from parallel
+    # T-turns to two parallel roads, because it looks nicer
     for y in range(rows * sector_rows):
         for x in range(cols * sector_cols):
             map[y][x] = tiles[get_road_neighbours(y, x)]
@@ -87,7 +99,10 @@ def generate_map():
                 map[y][x - 2] = tiles[(0, 2)]
 
 
-# for two_side: 0 clock wise, 1 counter clock wise. For others:
+# process of generating the graph. For each end of tile, all possible pairs of connected roads are generated and
+# added as adjacency list. Explanation of graph system: each tile has several vertices, each one responsible for
+# certain part of the road (e.g., in (0,2) there is right and left side. Left one is connected to the bottom tile,
+# right - top tile), then all possible pairs of two consecutive vertices are generated and put into adjacency list
 def generate_vertices():
     for y in range(ROWS):
         for x in range(COLS):
@@ -108,6 +123,7 @@ def generate_vertices():
                                 vertices[((y, x), (start, direction))] = neighbours
 
 
+# picks random tiles and puts cars on them, considering amount of "slowers" and overall.
 def generate_cars():
     all_starts = list(vertices.keys())
     shuffle(all_starts)
@@ -120,4 +136,3 @@ def generate_cars():
 
     for start in starts:
         cars.append(Car(start))
-

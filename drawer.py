@@ -1,7 +1,9 @@
 from init import *
 
 
+# singleton Drawer class responsible for drawing everything each frame
 class Drawer:
+    # initialisation. stores each picture, so they are loaded only once.
     def __init__(self):
         self.pic_by_tile = {}
         for tile in file_by_tile.keys():
@@ -20,6 +22,10 @@ class Drawer:
         car_slower_img = pygame.transform.scale(car_slower_img, (tile_width // 8, tile_height // 8))
         self.car_slower_img = car_slower_img
 
+    # first, it draws all tiles, calculating their position from image resolution and its position within the map,
+    # then - cars. For each car, considering its position within graph (and s value) and tile type, position is
+    # calculated within tile using function_by_tile dictionary, which contains lambda function of lines,
+    # and tile position.
     def draw(self):
         for y in range(ROWS):
             for x in range(COLS):
@@ -42,4 +48,3 @@ class Drawer:
             screen.blit(img, rect)
 
         pygame.display.update()
-
