@@ -11,5 +11,4 @@ There are two types of cars in total – "normal" and "slower". The "slower" has
 
 Instructions for use:
 Just run the program and admire) Sometimes the generation turns out to be strange, for example, a huge grid of intersections, but you can always restart.
-I'll be honest – in rare cases, cars get stuck at the very beginning. Then you should generate it again.
-The file is open in the window init.py . You can change the parameters and see what happens) I can't guarantee that nothing will break, it's not my responsibility, but you can indulge ;) When you leave, please be sure to return everything as it was, for this, the initial code is in the comment above, DO NOT TOUCH it!!!
+There is init.py. You ca

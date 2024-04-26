@@ -50,8 +50,9 @@ class Car:
                             handlers_to_work_with.append(handler)
                     for handler in handlers_to_work_with:
                         self.handlers.pop(handler)
-                        handler.car_crossed()
-
+                        handler.car_crossed(self)
+                        if self.type == "slower":
+                            print("crossed")
                 except RuntimeError:
                     pass
             self.vertex = choice(vertices[self.vertex])

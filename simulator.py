@@ -26,10 +26,10 @@ class Simulator:
 
         # either car or handler detects, that car has passed the cross and sets current car to None and removes it
         # from the queue, then updates itself.
-        def car_crossed(self):
+        def car_crossed(self, car):
             self.current = None
             if self.queue:
-                self.queue.pop()
+                self.queue.remove(car)
             self.update()
 
         # update process. checks if current car is None and if so - sets it to the first to cross. Also checks if
@@ -76,9 +76,9 @@ class Simulator:
         acc = 1
         vertices_to_check = []
         current = car.vertex
-        delta_car = 0.5
+        delta_car = 0.15
         if car.type == "slower":
-            delta_car = 0.75
+            delta_car = 0.1
         brake_dist = abs(car.v ** 2 / (2 * car.a_brake)) + delta_car
         brake_dist_max = abs(car.v_max ** 2 / (2 * car.a_brake)) + delta_car
 

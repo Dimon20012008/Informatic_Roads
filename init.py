@@ -37,11 +37,11 @@ cars = []
 
 a_friction = -1
 a_gas = 20
-a_brake = -40
+a_brake = -20
 v_max = 3
 
 a_gas_slower = 20
-a_brake_slower = -60
+a_brake_slower = -20
 v_max_slower = 1
 
 number_of_bots = 30
